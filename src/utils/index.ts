@@ -1,27 +1,30 @@
-import html2canvas from "html2canvas";
-/* eslint-disable no-empty */
+import html2canvas from "html2canvas-pro";
+
 type Options = {
   exceptSelectors: string[];
 };
+
 export const takeScreenshotOfDOM = async (options: Options) => {
-  const domCopy = structuredClone(document.body);
   const elementsToOmit = options.exceptSelectors.flatMap((selector) => [
-    ...domCopy.querySelectorAll(selector),
-  ]);
+    ...document.body.querySelectorAll(selector),
+  ]) as HTMLElement[];
   for (const element of elementsToOmit) {
-    try {
-      element.remove();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_: unknown) { }
+    element.style.display = "none";
   }
 
-  const canvas = await html2canvas(domCopy);
+  const canvas = await html2canvas(document.body);
   const base64Image = canvas.toDataURL("image/png");
 
-  const binaryString = atob(base64Image);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
+  for (const element of elementsToOmit) {
+    element.style.display = "none";
+  }
 
-  for (let i = 0; i < len; ++i) bytes[i] = binaryString.charCodeAt(i);
-  return { image: bytes, size: { width: canvas.width, height: canvas.height } };
+  const bytes = atob(base64Image.split(",")[1]);
+  const byteArray = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) byteArray[i] = bytes.charCodeAt(i);
+
+  const blob = new Blob([byteArray], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  return url;
 };

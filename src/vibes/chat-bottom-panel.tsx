@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Send, Loader2 } from "lucide-react"
 
 interface ChatBottomPanelProps {
+  id: string;
   onSendMessage?: (message: string) => void
   placeholder?: string
   disabled?: boolean
@@ -13,6 +14,7 @@ interface ChatBottomPanelProps {
 }
 
 export function ChatBottomPanel({
+  id,
   onSendMessage,
   placeholder = "Type your command or message...",
   disabled = false,
@@ -36,7 +38,7 @@ export function ChatBottomPanel({
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50">
+    <div id={id} className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50">
       <div className="max-w-4xl mx-auto p-4">
         <form onSubmit={handleSubmit} className="flex items-center space-x-2">
           <div className="flex-1 relative">

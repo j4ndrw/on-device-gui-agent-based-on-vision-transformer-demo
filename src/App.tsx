@@ -12,6 +12,7 @@ function App() {
     <>
       <Vibes.InteractiveDashboard />
       <Vibes.ChatBottomPanel
+        id={guiAgentPanelSelector}
         placeholder="Tell the GUI agent what to do"
         onSendMessage={async (prompt: string) => {
           const output = await generate(prompt);
